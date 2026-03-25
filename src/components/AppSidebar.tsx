@@ -1,7 +1,5 @@
-import { Flame, ShoppingBag, Flag, Layers, Sparkles, Settings, Shield, LogOut } from "lucide-react";
+import { Flame, ShoppingBag, Flag, Layers, Sparkles } from "lucide-react";
 import { useState } from "react";
-import { useNavigate } from "react-router-dom";
-import { useAuth } from "@/hooks/useAuth";
 import {
   Sidebar,
   SidebarContent,
@@ -12,7 +10,6 @@ import {
   SidebarMenuButton,
   SidebarMenuItem,
   SidebarHeader,
-  SidebarFooter,
   useSidebar,
 } from "@/components/ui/sidebar";
 import {
@@ -42,8 +39,6 @@ export function AppSidebar({ selected, onSelect }: AppSidebarProps) {
   const { state } = useSidebar();
   const collapsed = state === "collapsed";
   const [showComingSoon, setShowComingSoon] = useState(false);
-  const navigate = useNavigate();
-  const { user, isAdmin, signOut } = useAuth();
 
   const handleClick = (cat: typeof categories[0]) => {
     if (!cat.active) {
@@ -51,11 +46,6 @@ export function AppSidebar({ selected, onSelect }: AppSidebarProps) {
     } else {
       onSelect(cat.title);
     }
-  };
-
-  const handleSignOut = async () => {
-    await signOut();
-    navigate("/");
   };
 
   return (
@@ -110,36 +100,6 @@ export function AppSidebar({ selected, onSelect }: AppSidebarProps) {
             </SidebarGroupContent>
           </SidebarGroup>
         </SidebarContent>
-
-        <SidebarFooter className="p-2">
-          <SidebarMenu>
-            <SidebarMenuItem>
-              <SidebarMenuButton onClick={() => navigate("/settings")} className="hover:bg-muted/60">
-                <Settings className="mr-2 h-4 w-4" />
-                {!collapsed && <span>설정</span>}
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-            {isAdmin && (
-              <SidebarMenuItem>
-                <SidebarMenuButton onClick={() => navigate("/admin")} className="hover:bg-muted/60">
-                  <Shield className="mr-2 h-4 w-4" />
-                  {!collapsed && <span>관리자</span>}
-                </SidebarMenuButton>
-              </SidebarMenuItem>
-            )}
-            <SidebarMenuItem>
-              <SidebarMenuButton onClick={handleSignOut} className="hover:bg-muted/60 text-destructive">
-                <LogOut className="mr-2 h-4 w-4" />
-                {!collapsed && <span>로그아웃</span>}
-              </SidebarMenuButton>
-            </SidebarMenuItem>
-          </SidebarMenu>
-          {!collapsed && user && (
-            <div className="px-3 py-2 text-[11px] text-muted-foreground truncate">
-              {user.email}
-            </div>
-          )}
-        </SidebarFooter>
       </Sidebar>
 
       <Dialog open={showComingSoon} onOpenChange={setShowComingSoon}>
